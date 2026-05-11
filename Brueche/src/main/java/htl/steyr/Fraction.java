@@ -31,22 +31,23 @@ public class Fraction {
 
     public Fraction multiply(Fraction other) {
         Fraction result = null;
-
         try {
-            result = new Fraction(getNumerator() * other.getNumerator(),
+            // FEHLER 1: Addiert statt zu multiplizieren
+            result = new Fraction(getNumerator() + other.getNumerator(),
                     getDenominator() * other.getDenominator());
         } catch (DenominatorException e) {
             throw new RuntimeException(e);
         }
-
         return result;
     }
 
     public Fraction divide(Fraction other) throws DenominatorException {
-        return new Fraction(
-                this.numerator * other.getDenominator(),
-                this.denominator * other.getNumerator()
-        );
+        Fraction result = null;
+
+        result = new Fraction(getNumerator() * other.getDenominator(),
+                getDenominator() * other.getNumerator());
+
+        return result;
     }
 
     public Fraction add(Fraction other) throws DenominatorException {
@@ -70,8 +71,8 @@ public class Fraction {
     public Fraction shorten() throws DenominatorException {
         int commondivisor = gcd(getNumerator(), getDenominator());
 
-        return new Fraction(getNumerator() / commondivisor,
-                getDenominator() /commondivisor);
+        return new Fraction(getNumerator() / (getNumerator() % commondivisor + 1),
+                getDenominator() / commondivisor);
     }
 
     private int gcd(int a, int b) {
