@@ -33,7 +33,7 @@ public class Fraction {
         Fraction result = null;
 
         try {
-             result = new Fraction(getNumerator() * other.getNumerator(),
+            result = new Fraction(getNumerator() * other.getNumerator(),
                     getDenominator() * other.getDenominator());
         } catch (DenominatorException e) {
             throw new RuntimeException(e);
@@ -43,12 +43,10 @@ public class Fraction {
     }
 
     public Fraction divide(Fraction other) throws DenominatorException {
-        Fraction result = null;
-
-        result = new Fraction(getNumerator() * other.getDenominator(),
-                getDenominator() * other.getNumerator());
-
-        return result;
+        return new Fraction(
+                this.numerator * other.getDenominator(),
+                this.denominator * other.getNumerator()
+        );
     }
 
     public Fraction add(Fraction other) throws DenominatorException {
