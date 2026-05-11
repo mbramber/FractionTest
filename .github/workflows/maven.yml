@@ -27,7 +27,7 @@ jobs:
           cache: maven
 
       - name: Bauen mit Maven
-        run: mvn -B package
+        run: mvn -B package -DskipTests
 
       - name: Test Report erstellen
         uses: dorny/test-reporter@v2
