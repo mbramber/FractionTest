@@ -39,7 +39,6 @@ public class Fraction {
             throw new RuntimeException(e);
         }
         return result;
-
     }
 
     public Fraction divide(Fraction other) throws DenominatorException {
