@@ -2,9 +2,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "main" ]
 
 jobs:
   build:
@@ -18,31 +18,17 @@ jobs:
       - name: Code auschecken
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: JDK 17 einrichten
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
 
-      # Erst JAR bauen OHNE Tests
-      - name: Build JAR without tests
-        run: mvn -B package -DskipTests=true
+      - name: Bauen mit Maven
+        run: mvn -B package
 
-      # JAR immer hochladen
-      - name: Upload JAR artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: fraction-jar
-          path: Brueche/target/*.jar
-
-      # Tests separat ausführen
-      - name: Run Tests
-        run: mvn test
-        continue-on-error: true
-
-      # Testergebnisse anzeigen
-      - name: Report
+      - name: Test Report erstellen
         uses: dorny/test-reporter@v2
         if: always()
         with:
@@ -50,3 +36,9 @@ jobs:
           path: Brueche/target/surefire-reports/*.xml
           reporter: java-junit
           fail-on-error: true
+
+      - name: JAR-Datei hochladen
+        uses: actions/upload-artifact@v4
+        with:
+          name: fraction-jar
+          path: Brueche/target/*.jar
