@@ -2,46 +2,45 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
 
     defaults:
       run:
         working-directory: Brueche
 
     steps:
-      - name: Checkout repository
+      - name: Code auschecken
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: JDK 17 einrichten
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
 
-      - name: Build with Maven (Skip Tests)
-        run: mvn -B package -DskipTests=true
+      - name: Bauen mit Maven
+        run: mvn -B package
 
-      - name: Upload JAR artifact
+      - name: Test Report erstellen
+        uses: dorny/test-reporter@v2
+        if: always() # Läuft auch, wenn Tests fehlschlagen
+        with:
+          name: Maven Tests
+          # Pfad muss den Unterordner enthalten
+          path: Brueche/target/surefire-reports/*.xml
+          reporter: java-junit
+          fail-on-error: true
+
+      - name: JAR-Datei hochladen
         uses: actions/upload-artifact@v4
         with:
           name: fraction-jar
-          path: target/*.jar
-
-      - name: Run Tests with Maven
-        run: mvn -B test
-
-      - name: Report
-        uses: dorny/test-reporter@v2
-        if: always()
-        with:
-          name: Maven Tests
-          path: target/surefire-reports/*.xml
-          reporter: java-junit
-          fail-on-error: true
+          path: Brueche/target/*.jar
