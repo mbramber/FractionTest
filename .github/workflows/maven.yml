@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     defaults:
       run:
         working-directory: Brueche
@@ -24,17 +25,8 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Bauen mit Maven (Tests überspringen)
-        run: mvn -B package -DskipTests
-
-      - name: JAR-Datei hochladen
-        uses: actions/upload-artifact@v4
-        with:
-          name: fraction-jar
-          path: Brueche/target/*.jar
-
-      - name: Tests ausführen
-        run: mvn -B test
+      - name: Bauen mit Maven
+        run: mvn -B package
 
       - name: Test Report erstellen
         uses: dorny/test-reporter@v2
@@ -44,3 +36,9 @@ jobs:
           path: Brueche/target/surefire-reports/*.xml
           reporter: java-junit
           fail-on-error: true
+
+      - name: JAR-Datei hochladen
+        uses: actions/upload-artifact@v4
+        with:
+          name: fraction-jar
+          path: Brueche/target/*.jar
